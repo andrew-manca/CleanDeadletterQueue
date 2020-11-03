@@ -7,6 +7,7 @@ namespace FunctionApp6
 {
     public static class Function3
     {
+        //This is a test function to force messages to the DLQ
         [FunctionName("Function3")]
         public static void Run([ServiceBusTrigger("%myqueuereal%", Connection = "ServiceBusConnectionString")] string myQueueItem, ILogger log)
         {

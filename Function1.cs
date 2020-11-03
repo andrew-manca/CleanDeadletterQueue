@@ -7,6 +7,8 @@
 //{
 //    public static class Function1
 //    {
+
+          // This will re-add the message to the queue using a Service Bus trigger on the deadletter queue
 //        [FunctionName("Function1")]
 //        [return: ServiceBus("%myqueuereal%", Connection = "serviceBusConnectionString")]
 //        public static string Run([ServiceBusTrigger("%myqueue%", Connection = "serviceBusConnectionString")]string myQueueItem, ILogger log)
