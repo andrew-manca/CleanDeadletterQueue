@@ -39,7 +39,7 @@ namespace FunctionApp6
             {
                 log.LogInformation("sending message " + i);
                 //Only send messages that have a delivery count less than the count set
-                if (messages[i].SystemProperties.DeliveryCount > MaximumDeliveryCount)
+                if (messages[i].SystemProperties.DeliveryCount < MaximumDeliveryCount)
                 {
                     var message = Encoding.UTF8.GetString(messages[i].Body);
                     var newMessage = new Message(Encoding.UTF8.GetBytes(message));
