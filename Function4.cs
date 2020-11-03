@@ -16,9 +16,9 @@ namespace FunctionApp6
     public static class Function4
     {
 
-        const string ServiceBusConnectionString = "Endpoint=sb://amancaservicebusdeadletter.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=Xvf4TQe1xzD+rfctSOEuYLO6PbbEAXAz64Bw2VsyMTM=";
-        const string QueueName = "amancaTestQueue";
-        const string QueueNameDeadletter = "amancaTestQueue/$deadletterqueue";
+        const string ServiceBusConnectionString = "ConnectionString";
+        const string QueueName = "QueueName";
+        const string QueueNameDeadletter = "QueueName/$deadletterqueue";
         static IQueueClient queueClient;
         static IQueueClient deadLetterQueueClient;
 
@@ -36,7 +36,7 @@ namespace FunctionApp6
             var messages = await receiver.ReceiveAsync(1);
             for (int i = 0; i < messages.Count; i++)
             {
-                Console.WriteLine("sending message " + i);
+                log.LogInformation("sending message " + i);
                 var message = Encoding.UTF8.GetString(messages[i].Body);
                 var newMessage = new Message(Encoding.UTF8.GetBytes(message));
                 await queueClient.SendAsync(newMessage);
@@ -44,7 +44,7 @@ namespace FunctionApp6
             }
             await queueClient.CloseAsync();
             await deadLetterQueueClient.CloseAsync();
-            Console.WriteLine("Finished");
+            log.LogInformation("Finished");
             }
             catch (Exception ex)
             {
