@@ -35,30 +35,35 @@ namespace FunctionApp6
                 var receiver = new MessageReceiver(ServiceBusConnectionString, QueueNameDeadletter, ReceiveMode.ReceiveAndDelete);
 
                 var messages = await receiver.ReceiveAsync(30);
-                for (int i = 0; i < messages.Count; i++)
+                if (messages != null)
                 {
-                    log.LogInformation("sending message " + i);
-                    //Only send messages that have a delivery count less than the count set
-                    if (messages[i].SystemProperties.DeliveryCount < MaximumDeliveryCount)
+                    for (int i = 0; i < messages.Count; i++)
                     {
-                        var message = Encoding.UTF8.GetString(messages[i].Body);
-                        var newMessage = new Message(Encoding.UTF8.GetBytes(message));
-                        // This line looks to be needed for Session Service Buses
-                        //newMessage.SessionId = messages[i].SessionId;
-                        await queueClient.SendAsync(newMessage);
-                    }
+                        log.LogInformation("sending message " + i);
+                        //Only send messages that have a delivery count less than the count set
+                        if (messages[i].SystemProperties.DeliveryCount < MaximumDeliveryCount)
+                        {
+                            var message = Encoding.UTF8.GetString(messages[i].Body);
+                            var newMessage = new Message(Encoding.UTF8.GetBytes(message));
+                            // This line looks to be needed for Session Service Buses
+                            //newMessage.SessionId = messages[i].SessionId;
+                            await queueClient.SendAsync(newMessage);
+                        }
 
+                    }
+                    await queueClient.CloseAsync();
+                    await deadLetterQueueClient.CloseAsync();
+                    log.LogInformation("Finished");
                 }
-                await queueClient.CloseAsync();
-                await deadLetterQueueClient.CloseAsync();
-                log.LogInformation("Finished");
             }
+
+
             catch (Exception ex)
             {
                 log.LogInformation($"Exception: {ex}");
             }
-
         }
 
     }
+
 }
